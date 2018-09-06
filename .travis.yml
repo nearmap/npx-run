@@ -1,0 +1,21 @@
+language: node_js
+cache:
+  directories:
+    - ~/.npm
+
+notifications:
+  email: false
+
+node_js:
+  - '10'
+
+install: npm ci
+
+
+jobs:
+  include:
+    - stage: test
+      script: npm run test-build
+    - stage: publish
+      if: branch = master
+      script: npm run cd
