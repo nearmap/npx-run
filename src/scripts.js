@@ -24,11 +24,20 @@ const getScriptsModuleScripts = (pkgDir)=> (
 );
 
 
+const listScriptFiles = (pkgDir, fs)=> {
+  try {
+    return fs.readdirSync(join(pkgDir, 'scripts'));
+  } catch {
+    // we ignore if there is no scripts dir containing modules
+    return [];
+  }
+};
+
+
 const getScriptsDirScripts = (pkgDir, fs)=> {
   const scripts = {};
 
-  const files = fs.readdirSync(join(pkgDir, 'scripts'));
-  for (const fileName of files) {
+  for (const fileName of listScriptFiles(pkgDir, fs)) {
     const name = basename(fileName, '.js');
 
     if (extname(fileName) === '.js' && name !== 'index') {
