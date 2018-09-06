@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import {process} from './globals';
 import {showHelp} from './help';
 import {getScripts} from './scripts';
-import run from '.';
+import run from './run';
 
 
 jest.mock('libnpx', ()=> {

@@ -1,8 +1,8 @@
-import run from '.';
+import run from './run';
 import {main} from './cli';
 
 
-jest.mock('.', ()=> jest.fn(()=> -123));
+jest.mock('./run', ()=> jest.fn(()=> -123));
 
 
 describe('main()', ()=> {

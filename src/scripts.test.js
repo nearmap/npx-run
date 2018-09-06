@@ -119,6 +119,14 @@ describe('getScripts()', ()=> {
   });
 
 
+  it('ignores missing scripts module dir', ()=> {
+    const pkgDir = mockModules('ignored-scripts', []);
+    fs.readdirSync.mockImplementation(()=> throw new Error('no such file'));
+
+    expect(getScripts(pkgDir, fs)).toEqual({});
+  });
+
+
   it('ignores non-js scripts', ()=> {
     const pkgDir = mockModules('ignored-scripts', []);
     fs.readdirSync.mockReturnValueOnce(['build.js', 'ignored.txt']);

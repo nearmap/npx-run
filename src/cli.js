@@ -1,4 +1,6 @@
-import run from '.';
+#!/usr/bin/env node
+
+import run from './run';
 
 
 export const main = async (process)=> {
