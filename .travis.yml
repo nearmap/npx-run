@@ -7,7 +7,7 @@ notifications:
   email: false
 
 node_js:
-  - '9'
+  - '10'
 
 install: npm ci
 
