@@ -7,7 +7,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/nearmap/npx-run"
+    "url": "git@github.com:nearmap/npx-run.git"
   },
   "scripts": {
     "clean": "rimraf ./build",
