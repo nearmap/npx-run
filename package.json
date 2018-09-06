@@ -4,7 +4,6 @@
   "engines": {
     "node": ">=9.0.0"
   },
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git@github.com:nearmap/npx-run.git"
