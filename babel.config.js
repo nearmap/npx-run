@@ -11,9 +11,10 @@ module.exports = {
 
   presets: [
     ['@babel/preset-env', {
-      useBuiltIns: 'usage',
+      debug: true,
+      useBuiltIns: false,
       targets: {
-        node: '9'
+        node: '10'
       }
     }]
   ],
@@ -25,6 +26,7 @@ module.exports = {
     test: {
       presets: [
         ['@babel/preset-env', {
+          useBuiltIns: false,
           targets: {
             node: 'current'
           }
