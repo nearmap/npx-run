@@ -15,7 +15,7 @@ install: npm ci
 jobs:
   include:
     - stage: test
-      script: npm run test-build
+      script: npx run clean test build
     - stage: publish
       if: branch = master
-      script: npm run cd
+      script: npx run cd
