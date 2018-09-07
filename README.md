@@ -37,7 +37,7 @@ Available scripts will be matched against the pattern and run in lexicographical
 order of their names.
 
 Note that arguments passed to a pattern e.g. `npx run foo:* --arg1`
-will be passed to each matching scriptthey where run individually.
+will be passed to each matching script.
 
 
 ### dry-run
@@ -88,7 +88,7 @@ Any script defined in `package.json` that can be run with `npm run` can also
 be run with `npx run`.
 
 `<package-root>/package.json`:
-```json
+```javascript
 {
   ...
   "scripts": {
@@ -98,7 +98,8 @@ be run with `npx run`.
     "lint:js": "eslint .",
     "lint:md": "remark --no-stdout --use remark-lint *.md",
     "jest": "jest --no-cache"
-  }
+  },
+  ...
 }
 ```
 
