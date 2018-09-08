@@ -109,7 +109,7 @@ be run with `npx run`.
 > This may change in the future to fully support the same `npm run` behaviour.
 
 
-### <package-root>/scripts module
+### ./scripts module
 
 You can define all your scripts in a `scripts` module at the root of your
 package by exporting an object as default:
@@ -128,7 +128,7 @@ module.exports = {
 ```
 
 
-### <package-root>/scripts/* modules
+### ./scripts/* modules
 
 Instead of putting commands into scripts objects via `npm-scripts` or
 the `scripts` module you can create a `scripts/` module directory at the
