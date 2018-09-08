@@ -7,10 +7,19 @@ const scriptKeys = (scripts)=> Object.keys(scripts);
 
 
 function* getMatchingScripts(pattern, scripts) {
-  const prefix = pattern.endsWith(':*') ? pattern.slice(0, -1) : false;
+  if (scripts[pattern]) {
+    yield pattern;
+    return;
+  }
+
+  if (!pattern.includes('*')) {
+    return;
+  }
+
+  const regex = new RegExp(`^${pattern.replace('*', '.*?')}$`);
 
   for (const script of scriptKeys(scripts)) {
-    if (script === pattern || (prefix && script.startsWith(prefix))) {
+    if (script.match(regex)) {
       yield script;
     }
   }
@@ -18,20 +27,8 @@ function* getMatchingScripts(pattern, scripts) {
 
 
 const isScriptOrPattern = (scripts)=> (pattern)=> {
-  if (scripts[pattern]) {
-    return true;
-  }
-
-  const prefix = pattern.endsWith(':*') ? pattern.slice(0, -1) : false;
-  if (prefix) {
-    for (const script of scriptKeys(scripts)) {
-      if (script.startsWith(prefix)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  const [first] = getMatchingScripts(pattern, scripts);
+  return (first !== undefined);
 };
 
 

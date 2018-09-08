@@ -69,7 +69,6 @@ describe('parseArgs()', ()=> {
     expect([...tasks]).toEqual([
       [[], 'lint:md', ['remark', '--use', 'remark-lint', '*.md'], []],
       [[], 'lint:js', ['eslint', '.'], []]
-
     ]);
   });
 

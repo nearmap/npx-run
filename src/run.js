@@ -35,7 +35,9 @@ const runTasks = async (tasks, dryRun)=> {
 
     print`[{green ${script}}] {dim ${scriptCode}} ${scriptArgs}`;
 
-    if (!dryRun) {
+    if (dryRun && scriptCode[0] === 'run') {
+      await run('--dry-run', ...scriptCode.slice(1), ...scriptArgs);
+    } else if (!dryRun) {
       const result = await runCmd(runArgs, [...scriptCode, ...scriptArgs]);
       if (result === undefined) {
         return [count, -1];

@@ -67,7 +67,14 @@ describe('run()', ()=> {
     const exitCode = await run('--dry-run', 'test');
 
     expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
-    expect(getStdoutData()).toBe(chalk`[{green test}] {dim run lint jest} \n`);
+    expect(getStdoutData()).toBe([
+      chalk`[{green test}] {dim run lint jest} `,
+      chalk`[{green lint}] {dim run lint:*} `,
+      chalk`[{green lint:md}] {dim remark --use remark-lint *.md} `,
+      chalk`[{green lint:js}] {dim eslint .} `,
+      chalk`[{green jest}] {dim jest} `,
+      ''
+    ].join('\n'));
     expect(npx).not.toHaveBeenCalled();
     expect(exitCode).toBe(0);
   });
