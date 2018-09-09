@@ -1,17 +1,10 @@
-import {join, extname, basename} from 'path';
+import {join, basename} from 'path';
+import {loadModuleIfExists} from './modules';
 
 
-const loadPkgModule = (pkgDir, path)=> {
-  try {
-    return require(join(pkgDir, path));
-  } catch (err) {
-    if (err.code !== 'MODULE_NOT_FOUND') {
-      throw err;
-    }
-  }
-
-  return {};
-};
+const loadPkgModule = (pkgDir, path)=> (
+  loadModuleIfExists(join(pkgDir, path)) || {}
+);
 
 
 const getPkgScripts = (pkgDir)=> (
@@ -20,7 +13,7 @@ const getPkgScripts = (pkgDir)=> (
 
 
 const getScriptsModuleScripts = (pkgDir)=> (
-  loadPkgModule(pkgDir, 'scripts')
+  loadPkgModule(pkgDir, 'scripts').default || {}
 );
 
 
@@ -40,9 +33,8 @@ const getScriptsDirScripts = (pkgDir, fs)=> {
   for (const fileName of listScriptFiles(pkgDir, fs)) {
     const name = basename(fileName, '.js');
 
-    if (extname(fileName) === '.js' && name !== 'index') {
-      // TODO: make @babel/register optional
-      scripts[name] = `node -r @babel/register ./scripts/${fileName}`;
+    if (name !== 'index') {
+      scripts[name] = `node -r npx-run/loaders ./scripts/${fileName}`;
     }
   }
   return scripts;

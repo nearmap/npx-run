@@ -43,8 +43,8 @@ export const showHelp = (scripts)=> {
       You can add scripts using:
 
         ./package.json   - using npm run-scripts
-        ./scripts module - exporting a single object working the same as
-                           the package.json run-scripts.
+        ./scripts module - exporting a single default object working
+                           the same as the package.json run-scripts.
         ./scripts/*.js   - using any loadable nodejs module which is run
                            as a script given its basename
 

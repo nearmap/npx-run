@@ -27,22 +27,35 @@ const runCmd = async (nodeArgs, scriptArgs)=> {
 };
 
 
-const runTasks = async (tasks, dryRun)=> {
+const runSingle = async (dryRun, runArgs, [cmd, ...args])=> {
+  // TODO: could run this right away even if not in dry-run
+  if (dryRun && cmd === 'run') {
+    // eslint-disable-next-line no-use-before-define
+    return await run('--dry-run', ...args);
+  }
+
+  if (!dryRun) {
+    const result = await runCmd(runArgs, [cmd, ...args]);
+    if (result === undefined) {
+      return -1;
+    }
+    return result;
+  }
+
+  return 0;
+};
+
+
+const runAll = async (tasks, dryRun)=> {
   let count = 0;
 
-  for (const [runArgs, script, scriptCode, scriptArgs] of tasks) {
+  for (const [runArgs, script, cmd, scriptArgs] of tasks) {
     count += 1;
+    print`[{green ${script}}] {dim ${cmd}} ${scriptArgs}`;
 
-    print`[{green ${script}}] {dim ${scriptCode}} ${scriptArgs}`;
-
-    if (dryRun && scriptCode[0] === 'run') {
-      // eslint-disable-next-line no-use-before-define
-      await run('--dry-run', ...scriptCode.slice(1), ...scriptArgs);
-    } else if (!dryRun) {
-      const result = await runCmd(runArgs, [...scriptCode, ...scriptArgs]);
-      if (result === undefined) {
-        return [count, -1];
-      }
+    const result = await runSingle(dryRun, runArgs, [...cmd, ...scriptArgs]);
+    if (result !== 0) {
+      return [count, result];
     }
   }
 
@@ -59,7 +72,7 @@ const run = async (...args)=> {
     return 0;
   }
 
-  const [numTasksRun, exitCode] = await runTasks(tasks, dryRun);
+  const [numTasksRun, exitCode] = await runAll(tasks, dryRun);
 
   if (numTasksRun === 0) {
     print`
