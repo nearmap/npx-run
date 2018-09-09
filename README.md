@@ -112,12 +112,12 @@ be run with `npx run`.
 ### ./scripts module
 
 You can define all your scripts in a `scripts` module at the root of your
-package by exporting an object as default:
+package by exporting an object containing all script commands as default:
 
 `<package-root>/scripts.js`:
 ```javascript
 
-module.exports = {
+export default {
   default: 'run clean test'
   clean: 'rimraf ./build',
   test: 'run lint:* jest',
