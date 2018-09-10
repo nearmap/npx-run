@@ -1,4 +1,4 @@
-import {groups} from './iterables';
+import {groups, headTail} from './iterables';
 
 
 describe('*groups()', ()=> {
@@ -22,5 +22,27 @@ describe('*groups()', ()=> {
     ).toEqual(
       []
     );
+  });
+});
+
+
+describe('headTail()', ()=> {
+  function* testItems() {
+    yield 1;
+    yield 2;
+    yield 3;
+    throw new Error('Generator should not e exhausted.');
+  }
+
+  it('splits an iterable into head-item and tail-generator', ()=> {
+    const [item1, [item2, item3]] = headTail(testItems());
+
+    expect([item1, item2, item3]).toEqual([1, 2, 3]);
+  });
+
+  it('returns undefiend for first item if iterable is empty', ()=> {
+    const [item1, [item2, item3]] = headTail([]);
+
+    expect([item1, item2, item3]).toEqual([undefined, undefined, undefined]);
   });
 });

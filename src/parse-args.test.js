@@ -30,7 +30,7 @@ describe('parseArgs()', ()=> {
 
     expect(help).toBe(false);
     expect(dryRun).toBe(true);
-    expect([...tasks]).toEqual([[[], 'test', ['run', 'lint', 'jest'], []]]);
+    expect([...tasks]).toEqual([[[], 'test', ['run', 'lint', 'jest']]]);
   });
 
 
@@ -41,7 +41,7 @@ describe('parseArgs()', ()=> {
 
     expect(help).toBe(false);
     expect(dryRun).toBe(false);
-    expect([...tasks]).toEqual([[[], 'default', ['run', 'test'], []]]);
+    expect([...tasks]).toEqual([[[], 'default', ['run', 'test']]]);
   });
 
 
@@ -53,8 +53,8 @@ describe('parseArgs()', ()=> {
     expect(help).toBe(false);
     expect(dryRun).toBe(false);
     expect([...tasks]).toEqual([
-      [[], 'lint', ['run', 'lint:*'], []],
-      [[], 'jest', ['jest'], ['--verbose']]
+      [[], 'lint', ['run', 'lint:*']],
+      [[], 'jest', ['jest', '--verbose']]
     ]);
   });
 
@@ -67,8 +67,8 @@ describe('parseArgs()', ()=> {
     expect(help).toBe(false);
     expect(dryRun).toBe(false);
     expect([...tasks]).toEqual([
-      [[], 'lint:md', ['remark', '--use', 'remark-lint', '*.md'], []],
-      [[], 'lint:js', ['eslint', '.'], []]
+      [[], 'lint:md', ['remark', '--use', 'remark-lint', '*.md']],
+      [[], 'lint:js', ['eslint', '.']]
     ]);
   });
 
@@ -81,7 +81,7 @@ describe('parseArgs()', ()=> {
     expect(help).toBe(false);
     expect(dryRun).toBe(false);
     expect([...tasks]).toEqual([
-      [['--inspect-brk'], 'jest', ['jest'], ['--runInBand']]
+      [['--inspect-brk'], 'jest', ['jest', '--runInBand']]
     ]);
   });
 });

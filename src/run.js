@@ -6,6 +6,7 @@ import {print} from './strings';
 import {showHelp} from './help';
 import {getScripts} from './scripts';
 import {parseArgs} from './parse-args';
+import {formattedScript} from './colorize';
 import {process} from './globals';
 
 
@@ -46,14 +47,14 @@ const runSingle = async (dryRun, runArgs, [cmd, ...args])=> {
 };
 
 
-const runAll = async (tasks, dryRun)=> {
+const runAll = async (tasks, dryRun, scripts)=> {
   let count = 0;
 
-  for (const [runArgs, script, cmd, scriptArgs] of tasks) {
+  for (const [runArgs, scriptName, command] of tasks) {
     count += 1;
-    print`[{green ${script}}] {dim ${cmd}} ${scriptArgs}`;
+    print`[{green ${scriptName}}] ${formattedScript(scriptName, scripts)}`;
 
-    const result = await runSingle(dryRun, runArgs, [...cmd, ...scriptArgs]);
+    const result = await runSingle(dryRun, runArgs, command);
 
     if (result !== 0) {
       return [count, result];
@@ -73,9 +74,9 @@ const run = async (...args)=> {
     return 0;
   }
 
-  const [numTasksRun, exitCode] = await runAll(tasks, dryRun);
+  const [numRuns, exitCode] = await runAll(tasks, dryRun, scripts);
 
-  if (numTasksRun === 0) {
+  if (numRuns === 0) {
     print`
       {red scripts not found}
 

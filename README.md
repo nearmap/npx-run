@@ -82,7 +82,7 @@ and  `--runInBand` as extra argument to the command.
 `npx-run` supports multiple sources for scripts:
 
 
-### npm run-scrips
+### npm run-scripts
 
 Any script defined in `package.json` that can be run with `npm run` can also
 be run with `npx run`.
@@ -143,7 +143,7 @@ Example:
   ├── scripts
   │   ├── index.js   
   │   ├── deploy.js
-  |   ├── ...
+  │   ├── ...
 ```
 
 ```bash
