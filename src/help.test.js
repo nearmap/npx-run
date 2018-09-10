@@ -1,31 +1,28 @@
+import {process} from './globals';
 import {showHelp, scriptCompare} from './help';
 
 
-let mockStdout = '';
+jest.mock('chalk', ()=> (parts, ...args)=> String.raw({raw: parts}, ...args));
 
 jest.mock('./globals', ()=> ({
   process: {
-    stdout: {
-      write(data) {
-        mockStdout += data;
-      }
-    }
+    stdout: {write: jest.fn()}
   }
 }));
 
 
+const getStdoutData = ()=> (
+  process.stdout.write.mock.calls.map(([data])=> data).join('')
+);
+
+
 describe('showHelp', ()=> {
-  beforeEach(()=> {
-    mockStdout = '';
-  });
-
-
   it('prints help for missing scripts', ()=> {
     const scripts = {};
 
     showHelp(scripts);
 
-    expect(mockStdout).toMatchSnapshot();
+    expect(getStdoutData()).toMatchSnapshot();
   });
 
 
@@ -40,7 +37,7 @@ describe('showHelp', ()=> {
 
     showHelp(scripts);
 
-    expect(mockStdout).toMatchSnapshot();
+    expect(getStdoutData()).toMatchSnapshot();
   });
 });
 

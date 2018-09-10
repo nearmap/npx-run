@@ -1,31 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`showHelp prints help for missing scripts 1`] = `
-"npx [1mrun[22m [2m[run-args] [node-args][22m <[32mscript[39m|[34mpattern[39m> [srcipt-args] ...
+"npx {bold run} {dim [run-args] [node-args]} <{green script}|{blue pattern}> [srcipt-args] ...
 
-[4mExamples[24m:
-  npx [1mrun[22m
-  npx [1mrun[22m [32mclean[39m [32mbuild[39m
-  npx [1mrun[22m [32mconfig[39m --env='testing' [32mbuild[39m [32mdeploy[39m
-  npx [1mrun[22m [34mlint:*[39m
-  npx [1mrun[22m [2m--inspect-brk[22m [32mjest[39m
+{underline Examples}:
+  npx {bold run}
+  npx {bold run} {green clean} {green build}
+  npx {bold run} {green config} --env='testing' {green build} {green deploy}
+  npx {bold run} {blue lint:*}
+  npx {bold run} {dim --inspect-brk} {green jest}
 
-[4mdefault script[24m:
+{underline default script}:
   When calling without any arguemtns 'npx run' will run the
-  [1m[32mdefault[39m[22m script if it has been defined.
+  {bold.green default} script if it has been defined.
 
-[4mrun-args[24m:
+{underline run-args}:
   --help         Show this help.
   --dry-run      List scripts to be run, but don't run them.
 
-[4mnode-args[24m:
+{underline node-args}:
   Any args before the first script are sent to npx as node args.
 
   --inspect      Run node with --inspect to debug scripts.
   --inspect-brk  Run node with --inspect-brk to debug scripts
 
-[4mscripts[24m:
-[31mno scripts discoverd[39m
+{underline scripts}:
+{red no scripts discoverd}
 
 You can add scripts using:
 
@@ -44,34 +44,34 @@ name defined in ./package.json.
 `;
 
 exports[`showHelp prints help with list of scripts 1`] = `
-"npx [1mrun[22m [2m[run-args] [node-args][22m <[32mscript[39m|[34mpattern[39m> [srcipt-args] ...
+"npx {bold run} {dim [run-args] [node-args]} <{green script}|{blue pattern}> [srcipt-args] ...
 
-[4mExamples[24m:
-  npx [1mrun[22m
-  npx [1mrun[22m [32mclean[39m [32mbuild[39m
-  npx [1mrun[22m [32mconfig[39m --env='testing' [32mbuild[39m [32mdeploy[39m
-  npx [1mrun[22m [34mlint:*[39m
-  npx [1mrun[22m [2m--inspect-brk[22m [32mjest[39m
+{underline Examples}:
+  npx {bold run}
+  npx {bold run} {green clean} {green build}
+  npx {bold run} {green config} --env='testing' {green build} {green deploy}
+  npx {bold run} {blue lint:*}
+  npx {bold run} {dim --inspect-brk} {green jest}
 
-[4mdefault script[24m:
+{underline default script}:
   When calling without any arguemtns 'npx run' will run the
-  [1m[32mdefault[39m[22m script if it has been defined.
+  {bold.green default} script if it has been defined.
 
-[4mrun-args[24m:
+{underline run-args}:
   --help         Show this help.
   --dry-run      List scripts to be run, but don't run them.
 
-[4mnode-args[24m:
+{underline node-args}:
   Any args before the first script are sent to npx as node args.
 
   --inspect      Run node with --inspect to debug scripts.
   --inspect-brk  Run node with --inspect-brk to debug scripts
 
-[4mscripts[24m:
-  [1m[32mdefault[39m[22m          [1mrun[22m [32mclean[39m [32mtest[39m
-  [32mclean[39m            rimraf [2m./build[22m
-  [32mcreate-pkg-json[39m  echo [2mdone[22m
-  [32mdry[39m              [1mrun[22m [2m--dry-run[22m [32mclean[39m --verbose
-  [32mtest[39m             echo [2mWorks on my machine![22m
+{underline scripts}:
+  {bold.green default}          {bold run} {green clean} {green test}
+  {green clean}            rimraf {dim ./build}
+  {green create-pkg-json}  echo {dim done}
+  {green dry}              {bold run} {dim --dry-run} {green clean} --verbose
+  {green test}             echo {dim Works on my machine!}
 "
 `;
