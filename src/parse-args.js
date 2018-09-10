@@ -1,25 +1,27 @@
 import splitArgs from 'string-argv';
 
-import {groups} from './iterables';
+import {groups, headTail} from './iterables';
 
 
-const scriptKeys = (scripts)=> Object.keys(scripts);
+export const scriptKeys = (scripts)=> Object.keys(scripts);
+
+export const isPattern = (scriptOrPattern)=> scriptOrPattern.includes('*');
 
 
-function* getMatchingScripts(pattern, scripts) {
-  if (scripts[pattern]) {
-    yield pattern;
+function* getMatchingScripts(scriptOrPattern, scripts) {
+  if (scripts[scriptOrPattern]) {
+    yield scriptOrPattern;
     return;
   }
 
-  if (!pattern.includes('*')) {
+  if (!isPattern(scriptOrPattern)) {
     return;
   }
 
-  const regex = new RegExp(`^${pattern.replace('*', '.*?')}$`);
+  const pattern = new RegExp(`^${scriptOrPattern.replace(/\*/g, '.*?')}$`);
 
   for (const script of scriptKeys(scripts)) {
-    if (script.match(regex)) {
+    if (script.match(pattern)) {
       yield script;
     }
   }
@@ -34,21 +36,21 @@ const isScriptOrPattern = (scripts)=> (pattern)=> {
 
 function* expandScriptPatterns(runArgs, [pattern, ...scriptArgs], scripts) {
   for (const matchedScript of getMatchingScripts(pattern, scripts)) {
-    const scriptCode = splitArgs(scripts[matchedScript]);
-    yield [runArgs, matchedScript, scriptCode, scriptArgs];
+    const command = splitArgs(scripts[matchedScript]);
+    yield [runArgs, matchedScript, [...command, ...scriptArgs]];
   }
 }
 
+export const splitByScripts = (args, scripts)=> (
+  groups(args, isScriptOrPattern(scripts))
+);
 
-function* splitScripts(args, scripts) {
-  let runArgs = null;
 
-  for (const argGroup of groups(args, isScriptOrPattern(scripts))) {
-    if (runArgs === null) {
-      runArgs = argGroup;
-    } else {
-      yield * expandScriptPatterns(runArgs, argGroup, scripts);
-    }
+function* getTasks(args, scripts) {
+  const [runArgs, scriptsAndArgs] = headTail(splitByScripts(args, scripts));
+
+  for (const argGroup of scriptsAndArgs) {
+    yield * expandScriptPatterns(runArgs, argGroup, scripts);
   }
 }
 
@@ -61,7 +63,7 @@ export const parseArgs = (args, scripts)=> {
   const remainingArgs = dryRun ? args.slice(1) : args;
   const finalArgs = remainingArgs.length ? remainingArgs : ['default'];
 
-  const tasks = splitScripts(finalArgs, scripts);
+  const tasks = getTasks(finalArgs, scripts);
 
   return {tasks, dryRun, help};
 };

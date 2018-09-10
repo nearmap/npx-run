@@ -9,6 +9,9 @@ import {getScripts} from './scripts';
 import run from './run';
 
 
+jest.mock('chalk', ()=> (parts, ...args)=> String.raw({raw: parts}, ...args));
+
+
 jest.mock('libnpx', ()=> {
   const fn = jest.fn();
   fn.parseArgs = jest.fn((...args)=> args);
@@ -68,11 +71,11 @@ describe('run()', ()=> {
 
     expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
     expect(getStdoutData()).toBe([
-      chalk`[{green test}] {dim run lint jest} `,
-      chalk`[{green lint}] {dim run lint:*} `,
-      chalk`[{green lint:md}] {dim remark --use remark-lint *.md} `,
-      chalk`[{green lint:js}] {dim eslint .} `,
-      chalk`[{green jest}] {dim jest} `,
+      chalk`[{green test}] {bold run} {green lint} {green jest}`,
+      chalk`[{green lint}] {bold run} {blue lint:*}`,
+      chalk`[{green lint:md}] remark {dim --use remark-lint *.md}`,
+      chalk`[{green lint:js}] eslint {dim .}`,
+      chalk`[{green jest}] jest {dim }`,
       ''
     ].join('\n'));
     expect(npx).not.toHaveBeenCalled();
@@ -84,7 +87,9 @@ describe('run()', ()=> {
     const exitCode = await run('test');
 
     expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
-    expect(getStdoutData()).toBe(chalk`[{green test}] {dim run lint jest} \n`);
+    expect(getStdoutData()).toBe(
+      chalk`[{green test}] {bold run} {green lint} {green jest}\n`
+    );
     expect(npx).toHaveBeenCalledWith([[
       'path-to-node', 'path-to-runner',
       '--always-spawn', '--no-install',
@@ -98,7 +103,7 @@ describe('run()', ()=> {
     const exitCode = await run('--inspect', 'jest');
 
     expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
-    expect(getStdoutData()).toBe(chalk`[{green jest}] {dim jest} \n`);
+    expect(getStdoutData()).toBe(chalk`[{green jest}] jest {dim }\n`);
     expect(npx).toHaveBeenCalledWith([[
       'path-to-node', 'path-to-runner',
       '--always-spawn', '--no-install', '--node-arg=--inspect',
@@ -133,8 +138,8 @@ describe('run()', ()=> {
 
     expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
     expect(getStdoutData()).toBe(
-      chalk`[{green lint}] {dim run lint:*} \n` +
-      chalk`[{green jest}] {dim jest} \n`
+      chalk`[{green lint}] {bold run} {blue lint:*}\n` +
+      chalk`[{green jest}] jest {dim }\n`
     );
     expect(npx).toHaveBeenCalledTimes(2);
     expect(npx).toHaveBeenCalledWith([[

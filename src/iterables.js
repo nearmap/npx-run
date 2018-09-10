@@ -14,3 +14,11 @@ export function* groups(items, split) {
     yield collected;
   }
 }
+
+
+export function* headTail(iterable) {
+  const iter = iterable[Symbol.iterator]();
+  const {value} = iter.next();
+  yield value;
+  yield iter;
+}

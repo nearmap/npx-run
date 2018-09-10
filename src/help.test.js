@@ -1,4 +1,4 @@
-import {showHelp} from './help';
+import {showHelp, scriptCompare} from './help';
 
 
 let mockStdout = '';
@@ -31,11 +31,25 @@ describe('showHelp', ()=> {
 
   it('prints help with list of scripts', ()=> {
     const scripts = {
-      test: 'echo "Works on my machine!"'
+      test: 'echo "Works on my machine!"',
+      clean: 'rimraf ./build',
+      default: 'run clean test',
+      'create-pkg-json': 'echo "done"',
+      dry: 'run --dry-run clean --verbose'
     };
 
     showHelp(scripts);
 
     expect(mockStdout).toMatchSnapshot();
+  });
+});
+
+
+describe('scriptCompare', ()=> {
+  it('sorts', ()=> {
+    const items = ['default', 'a', 'b', 'a', 'default', 'c'];
+    expect([...items].sort(scriptCompare)).toEqual([
+      'default', 'default', 'a', 'a', 'b', 'c'
+    ]);
   });
 });
