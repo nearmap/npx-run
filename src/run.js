@@ -39,7 +39,7 @@ const runSingle = async (dryRun, runArgs, [cmd, ...args])=> {
     if (result === undefined) {
       return -1;
     }
-    return result;
+    return result.code;
   }
 
   return 0;
@@ -54,6 +54,7 @@ const runAll = async (tasks, dryRun)=> {
     print`[{green ${script}}] {dim ${cmd}} ${scriptArgs}`;
 
     const result = await runSingle(dryRun, runArgs, [...cmd, ...scriptArgs]);
+
     if (result !== 0) {
       return [count, result];
     }
