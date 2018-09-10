@@ -47,7 +47,7 @@ describe('run()', ()=> {
   };
 
   beforeEach(()=> {
-    npx.mockImplementation(()=> Promise.resolve(0));
+    npx.mockImplementation(()=> Promise.resolve({code: 0}));
     getScripts.mockImplementation(()=> mockScripts);
   });
 
@@ -125,14 +125,18 @@ describe('run()', ()=> {
   });
 
 
-  it('stops running scripts on first failure', async ()=> {
-    npx.mockImplementation(()=> Promise.resolve());
+  it('stops running scripts when npx returns undefined', async ()=> {
+    npx.mockImplementationOnce(()=> Promise.resolve({code: 0}));
+    npx.mockImplementationOnce(()=> Promise.resolve());
 
     const exitCode = await run('lint', 'jest');
 
     expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
-    expect(getStdoutData()).toBe(chalk`[{green lint}] {dim run lint:*} \n`);
-    expect(npx).toHaveBeenCalledTimes(1);
+    expect(getStdoutData()).toBe(
+      chalk`[{green lint}] {dim run lint:*} \n` +
+      chalk`[{green jest}] {dim jest} \n`
+    );
+    expect(npx).toHaveBeenCalledTimes(2);
     expect(npx).toHaveBeenCalledWith([[
       'path-to-node', 'path-to-runner',
       '--always-spawn', '--no-install',
@@ -140,4 +144,5 @@ describe('run()', ()=> {
     ]]);
     expect(exitCode).toBe(-1);
   });
+
 });
