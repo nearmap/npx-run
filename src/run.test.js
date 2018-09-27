@@ -6,6 +6,8 @@ import chalk from 'chalk';
 import {process} from './globals';
 import {showHelp} from './help';
 import {getScripts} from './scripts';
+import findPackageDir from './pkg-root';
+
 import run from './run';
 
 
@@ -18,11 +20,12 @@ jest.mock('libnpx', ()=> {
   return fn;
 });
 
+jest.mock('./pkg-root', ()=> jest.fn(()=> '/tmp/test-package-dir'));
+
 
 jest.mock('./globals', ()=> ({
   process: {
     argv: ['path-to-node', 'path-to-runner'],
-    cwd: ()=> 'test-dir',
     stdout: {write: jest.fn()}
   }
 }));
@@ -58,7 +61,8 @@ describe('run()', ()=> {
   it('shows --help', async ()=> {
     const exitCode = await run('--help');
 
-    expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
+    expect(findPackageDir).toHaveBeenCalledWith();
+    expect(getScripts).toHaveBeenCalledWith('/tmp/test-package-dir', fs);
     expect(showHelp).toHaveBeenCalledWith(mockScripts);
     expect(getStdoutData()).toBe('');
     expect(npx).not.toHaveBeenCalled();
@@ -69,7 +73,8 @@ describe('run()', ()=> {
   it('lists scripts in --dry-run', async ()=> {
     const exitCode = await run('--dry-run', 'test', '--verbose');
 
-    expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
+    expect(findPackageDir).toHaveBeenCalledWith();
+    expect(getScripts).toHaveBeenCalledWith('/tmp/test-package-dir', fs);
     expect(getStdoutData()).toBe([
       chalk`[{green test}] {bold run} {green lint} {green jest} --verbose`,
       chalk`[{green lint}] {bold run} {blue lint:*}`,
@@ -86,7 +91,8 @@ describe('run()', ()=> {
   it('runs scripts using npx', async ()=> {
     const exitCode = await run('test');
 
-    expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
+    expect(findPackageDir).toHaveBeenCalledWith();
+    expect(getScripts).toHaveBeenCalledWith('/tmp/test-package-dir', fs);
     expect(getStdoutData()).toBe(
       chalk`[{green test}] {bold run} {green lint} {green jest}\n`
     );
@@ -102,7 +108,8 @@ describe('run()', ()=> {
   it('runs scripts using npx with node args', async ()=> {
     const exitCode = await run('--inspect', 'jest');
 
-    expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
+    expect(findPackageDir).toHaveBeenCalledWith();
+    expect(getScripts).toHaveBeenCalledWith('/tmp/test-package-dir', fs);
     expect(getStdoutData()).toBe(chalk`[{green jest}] jest {dim }\n`);
     expect(npx).toHaveBeenCalledWith([[
       'path-to-node', 'path-to-runner',
@@ -116,7 +123,8 @@ describe('run()', ()=> {
   it('shows error if no scripts were run', async ()=> {
     const exitCode = await run('foobar');
 
-    expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
+    expect(findPackageDir).toHaveBeenCalledWith();
+    expect(getScripts).toHaveBeenCalledWith('/tmp/test-package-dir', fs);
     expect(getStdoutData()).toBe([
       chalk`{red scripts not found}`,
       '',
@@ -124,7 +132,7 @@ describe('run()', ()=> {
       'npx run --help\n\n'
     ].join('\n'));
 
-    expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
+    expect(getScripts).toHaveBeenCalledWith('/tmp/test-package-dir', fs);
     expect(npx).not.toHaveBeenCalled();
     expect(exitCode).toBe(-1);
   });
@@ -136,7 +144,8 @@ describe('run()', ()=> {
 
     const exitCode = await run('lint', 'jest');
 
-    expect(getScripts).toHaveBeenCalledWith('test-dir', fs);
+    expect(findPackageDir).toHaveBeenCalledWith();
+    expect(getScripts).toHaveBeenCalledWith('/tmp/test-package-dir', fs);
     expect(getStdoutData()).toBe(
       chalk`[{green lint}] {bold run} {blue lint:*}\n` +
       chalk`[{green jest}] jest {dim }\n`
@@ -149,5 +158,4 @@ describe('run()', ()=> {
     ]]);
     expect(exitCode).toBe(-1);
   });
-
 });
