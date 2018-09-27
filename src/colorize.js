@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import splitArgs from 'string-argv';
 import {headTail} from './iterables';
 import {splitByScripts, isPattern} from './parse-args';
 
@@ -35,9 +34,7 @@ export const formattedScriptName = (scriptName)=> (
 );
 
 
-export const formattedScript = (name, scripts)=> {
-  const [cmd, ...args] = splitArgs(scripts[name]);
-
+export const formattedScript = ([cmd, ...args], scripts)=> {
   if (cmd === 'run') {
     const groups = [...formattedRunGroups(args, scripts)].join(' ');
     return chalk`{bold run} ${groups}`;

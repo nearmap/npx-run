@@ -52,7 +52,8 @@ const runAll = async (tasks, dryRun, scripts)=> {
 
   for (const [runArgs, scriptName, command] of tasks) {
     count += 1;
-    print`[{green ${scriptName}}] ${formattedScript(scriptName, scripts)}`;
+    const preview = formattedScript(command, scripts);
+    print`[{green ${scriptName}}] ${preview}`;
 
     const result = await runSingle(dryRun, runArgs, command);
 
