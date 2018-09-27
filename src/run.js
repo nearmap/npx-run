@@ -1,5 +1,4 @@
 import fs from 'fs';
-
 import npx from 'libnpx';
 
 import {print} from './strings';
@@ -8,10 +7,7 @@ import {getScripts} from './scripts';
 import {parseArgs} from './parse-args';
 import {formattedScript} from './colorize';
 import {process} from './globals';
-
-
-// TODO: this is not always curr dir
-const findPackageDir = ()=> process.cwd();
+import findPackageDir from './pkg-root';
 
 
 const runCmd = async (nodeArgs, scriptArgs)=> {
