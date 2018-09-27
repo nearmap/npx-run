@@ -1,3 +1,5 @@
+import splitArgs from 'string-argv';
+
 import {print} from './strings';
 import {formattedScriptName, formattedScript} from './colorize';
 
@@ -23,10 +25,11 @@ const printScripts = (scripts)=> {
 
   for (const scriptName of scriptNames) {
     const name = formattedScriptName(scriptName);
-    const cmd = formattedScript(scriptName, scripts);
+    const command = splitArgs(scripts[scriptName]);
+    const preview = formattedScript(command, scripts);
     const padding = maxLen - scriptName.length;
 
-    print`  ${name} ${' '.repeat(padding)} ${cmd}`;
+    print`  ${name} ${' '.repeat(padding)} ${preview}`;
   }
 
   return scriptNames.length;
