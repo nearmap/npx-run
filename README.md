@@ -1,5 +1,7 @@
 # npx-run
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/nearmap/npx-run.svg)](https://greenkeeper.io/)
+
 Easily run scripts using npx.
 
 
